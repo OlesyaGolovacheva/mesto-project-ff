@@ -1,5 +1,5 @@
 // @todo: Темплейт карточки
-
+const cardTemplate = document.querySelector('#card-template').content;
 // @todo: DOM узлы
 
 const cardsContainer = document.querySelector('.places__list');
@@ -8,7 +8,6 @@ const cardsContainer = document.querySelector('.places__list');
 
 function createCard(cardData, onDelete) {
 
-    const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     const deleteButton = cardElement.querySelector('.card__delete-button');
 
