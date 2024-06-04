@@ -31,3 +31,11 @@ function closeClickOverlay(evt){
     closeOpenedPopup(evt)
   }
 }
+
+export function displayLoading(popup){
+  popup.querySelector('.popup__button').textContent = 'Сохранение...';
+}
+
+export function hideLoading(popup){
+  popup.querySelector('.popup__button').textContent = 'Сохранить';
+}
