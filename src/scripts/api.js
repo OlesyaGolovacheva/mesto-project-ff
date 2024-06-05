@@ -1,47 +1,37 @@
-const password = '7542735c-b616-4dad-bec7-2cb1d297a14f';
+const token = '7542735c-b616-4dad-bec7-2cb1d297a14f';
 const cardsPath = 'https://nomoreparties.co/v1/wff-cohort-14/cards';
 const userPath = 'https://nomoreparties.co/v1/wff-cohort-14/users/me';
+const handleResponse = (result) => {
+    if(result.ok){
+      return result.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
 
 export const getAllCards = () => {
     return fetch(cardsPath, {
       headers: {
-        authorization: password
+        authorization: token
       }
     })
-    .then((result) => {
-      if(result.ok){
-        return result.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-        console.log(err);
-    }); 
+    .then(handleResponse) 
 };
 
  export const getProfileData = () => {
     return fetch(userPath, {
         method: 'GET',
         headers: {
-        authorization: password
+        authorization: token
         }
     })
-    .then((result) => {
-        if(result.ok){
-          return result.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    }); 
+    .then(handleResponse) 
 };
 
 export const setProfileDataApi = (profile) => {
     return fetch(userPath, {
         method: 'PATCH',
         headers: {
-            authorization: password,
+            authorization: token,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -49,26 +39,28 @@ export const setProfileDataApi = (profile) => {
             about: profile.about
         })
     })
+    .then(handleResponse)
 };
 
 export const setProfileImageApi = (profileData) => {
     return fetch(userPath + '/avatar', {
         method: 'PATCH',
         headers: {
-            authorization: password,
+            authorization: token,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             avatar: profileData.avatar
         })
     })
+    .then(handleResponse)
 };
 
 export const postNewCardApi = (cardData) => {
     return fetch(cardsPath, {
         method: 'POST',
         headers: {
-            authorization: password,
+            authorization: token,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -76,15 +68,7 @@ export const postNewCardApi = (cardData) => {
             link: cardData.link
         })
     })
-    .then((response) => {
-        if(response.ok){
-          return response.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    }); 
+    .then(handleResponse)
 };
 
 
@@ -92,19 +76,11 @@ export const deleteCardApi = (cardId) => {
     return fetch(cardsPath + '/' + cardId, {
         method: 'DELETE',
         headers: {
-            authorization: password,
+            authorization: token,
             'Content-Type': 'application/json'
         }
     })
-    .then((response) => {
-        if(response.ok){
-          return response.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    }); 
+    .then(handleResponse) 
 };
 
 
@@ -112,36 +88,20 @@ export const putLikeApi = (cardId) => {
     return fetch(cardsPath + '/likes/' + cardId, {
         method: 'PUT',
         headers: {
-            authorization: password,
+            authorization: token,
             'Content-Type': 'application/json'
         }
     })
-    .then((response) => {
-        if(response.ok){
-          return response.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    }); 
+    .then(handleResponse) 
 };
 
 export const deleteLikeApi = (cardId) => {
     return fetch(cardsPath + '/likes/' + cardId, {
         method: 'DELETE',
         headers: {
-            authorization: password,
+            authorization: token,
             'Content-Type': 'application/json'
         }
     })
-    .then((response) => {
-        if(response.ok){
-          return response.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    }); 
+    .then(handleResponse)
 };

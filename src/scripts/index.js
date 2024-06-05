@@ -32,7 +32,7 @@ Promise.all([getProfileData(), getAllCards()])
 .then(([profileDataResponse, cardsInfoResponse]) => {
   setProfileInfo(profileDataResponse);
   const userId = profileDataResponse._id;
-  initialCards(cardsInfoResponse, userId);
+  renderInitialCards(cardsInfoResponse, userId);
 })
 .catch((err) => {
   console.log(err);
@@ -44,7 +44,7 @@ function setProfileInfo(data){
   document.querySelector('.profile__image').style.backgroundImage = `url(${data.avatar})`;
 }
 
-function initialCards(data, userId) {
+function renderInitialCards(data, userId) {
   data.forEach((cardData) => {
     cardData.userId = userId;
     const card = createCard(cardData, 
@@ -91,15 +91,16 @@ function handleFormSubmitEdit(evt) {
     displayLoading(formEditUserInfo);
     const profile = {name: nameInput.value, about: jobInput.value};
     setProfileDataApi(profile).then((result) => {
-        if(result.ok){
-          profileTitle.textContent = profile.name;
-          profileAbout.textContent = profile.about;
-        } else {
-          return Promise.reject(`Ошибка: ${res.status}`);
-        }
-      });
-    hideLoading(formEditUserInfo);
-    closePopup(formEditUserInfo);
+      profileTitle.textContent = result.name;
+      profileAbout.textContent = result.about;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      hideLoading(formEditUserInfo);
+      closePopup(formEditUserInfo);
+    });
   }
 }
 
@@ -109,14 +110,15 @@ function handleFormSubmitEditImage(evt) {
     displayLoading(formEditUserImage);
     const profileData = {avatar: avatarInput.value};
     setProfileImageApi(profileData).then((result) => {
-        if(result.ok){
-          document.querySelector('.profile__image').style.backgroundImage = `url(${profileData.avatar})`;
-          hideLoading(formEditUserImage);
-        } else {
-          return Promise.reject(`Ошибка: ${res.status}`);
-        }
-      });
-    closePopup(formEditUserImage);
+      document.querySelector('.profile__image').style.backgroundImage = `url(${result.avatar})`;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      hideLoading(formEditUserImage);
+      closePopup(formEditUserImage);
+    });
   }
 }
 
@@ -133,9 +135,14 @@ function handleFormSubmitAdd(evt) {
         (event) => handleLike(event, response._id),
          handleImageClick);
       cardsContainer.prepend(card);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      hideLoading(formAddElement);
+      closePopup(formAddElement);
     });
-    hideLoading(formAddElement);
-    closePopup(formAddElement);
   }
   evt.target.reset();
 }

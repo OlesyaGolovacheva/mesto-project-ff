@@ -6,7 +6,7 @@ const showInputError = (formElement, inputElement, errorMessage, validationPrope
     inputElement.classList.add(validationProperty.inputErrorClass);
     errorElement.textContent = errorMessage;
     errorElement.classList.add(validationProperty.errorClass);
-    formElement.querySelector(validationProperty.submitButtonSelector).classList.add(validationProperty.inactiveButtonClass);
+    const buttonElement = formElement.querySelector(validationProperty.submitButtonSelector);
   };
   
   const hideInputError = (formElement, inputElement, validationProperty) => {
@@ -14,7 +14,7 @@ const showInputError = (formElement, inputElement, errorMessage, validationPrope
     inputElement.classList.remove(validationProperty.inputErrorClass);
     errorElement.classList.remove(validationProperty.errorClass);
     errorElement.textContent = '';
-    formElement.querySelector(validationProperty.submitButtonSelector).classList.remove(validationProperty.inactiveButtonClass);
+    const buttonElement = formElement.querySelector(validationProperty.submitButtonSelector);
   };
   
   const checkInputValidity = (formElement, inputElement, validationProperty) => {
@@ -33,9 +33,12 @@ const showInputError = (formElement, inputElement, errorMessage, validationPrope
   
   const setEventListeners = (formElement, validationProperty) => {
     const inputList = Array.from(formElement.querySelectorAll(validationProperty.inputSelector));
+    const buttonElement = formElement.querySelector('.popup__button');
+    toggleButtonState(inputList, buttonElement, validationProperty);
     inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', function () {
         checkInputValidity(formElement, inputElement, validationProperty);
+        toggleButtonState(inputList, buttonElement, validationProperty);
       });
     });
   };
@@ -56,5 +59,20 @@ const showInputError = (formElement, inputElement, errorMessage, validationPrope
     inputListForm.forEach((elem) => {
       hideInputError(formElement, elem, validationProperty);
     });
-    buttonElement.classList.add(validationProperty.inactiveButtonClass);
   };
+
+  function hasInvalidInput(inputList){
+    return inputList.some((inputElement) => {
+      return !inputElement.validity.valid;
+    })
+  }
+
+  function toggleButtonState(inputList, buttonElement, validationProperty){
+    if (hasInvalidInput(inputList)) {
+      buttonElement.disabled = true;
+      buttonElement.classList.add(validationProperty.inactiveButtonClass);
+    } else {
+      buttonElement.disabled = false;
+      buttonElement.classList.remove(validationProperty.inactiveButtonClass);
+    }
+  }
